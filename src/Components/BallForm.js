@@ -1,47 +1,71 @@
 import React, {Component} from 'react';
+import Chance from 'chance';
+
+const chance = new Chance();
 
 export default class BallForm extends Component {
     constructor() {
         super();
         this.state = {
-            ticket: [],
+            ticket: Array.from({length: 6}).fill(0),
         }
     }
 
-    ballNums = Array.from({ length: 6 }, (_, num) => num)
-
     handleFormSubmit = e => {
-        console.log(e);
         e.preventDefault();
+
+        const whiteBall = chance.unique(chance.integer, 5, {min: 1, max: 69});
+        const redBall = chance.integer({min: 1, max: 26});
+
+        this.setState({
+            ticket: [...whiteBall, redBall],
+        })
     }
 
-    handleInputChange = e => {
-        const newTicket = [...this.state.ticket];
-        newTicket[e.target.id] = e.target.value;
-        this.setState({
-            ticket: [...newTicket]
-        })
-        console.log(e.target.value)
-    }
+    isPowerball = ballId => ballId === this.state.ticket.length - 1 ? 'powerBall' : 'normalBall'
 
     render() {
         return (<form onSubmit={this.handleFormSubmit}>
-            {this.ballNums.map(ball =>
-                <input
-                    key={ball}
-                    id={ball}
-                    style={ballInputStyle}
-                    value={this.state.ticket[ball]}
-                    type='number'
-                    min='1'
-                    max='69' />
-            )}
-            <input type='submit' value='Buy Ticket' />
-            <input type='submit' value='Random Ticket' />
+            <div style={center}>
+                {this.state.ticket.map((ball, key) =>
+                    <div key={key} style={getBallStyle(this.isPowerball(key))}>
+                        <div style={ballNum}>
+                            {this.state.ticket[key]}
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div>
+                {/*<input type='submit' value='Buy Ticket' />*/}
+                <input type='submit' value='Random Ticket' />
+            </div>
         </form>)
     }
 }
+const center = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '10px',
+}
 
-const ballInputStyle = {
+const getBallStyle = curBall => ({
+    height: '100px',
+    width: '100px',
+    borderRadius: '100%',
+    backgroundColor: ballColor[curBall],
     textAlign: 'center',
+    marginLeft: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+})
+
+const ballColor = {
+    powerBall: 'red',
+    normalBall: 'lightgray',
+}
+
+const ballNum = {
+    width: '100%',
 }
