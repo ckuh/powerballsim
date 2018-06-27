@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import Chance from 'chance';
-
-const chance = new Chance();
+import getTicket from '../utils/getTicket'
 
 export default class BallForm extends Component {
     constructor() {
@@ -14,11 +12,8 @@ export default class BallForm extends Component {
     handleFormSubmit = e => {
         e.preventDefault();
 
-        const whiteBall = chance.unique(chance.integer, 5, {min: 1, max: 69});
-        const redBall = chance.integer({min: 1, max: 26});
-
         this.setState({
-            ticket: [...whiteBall, redBall],
+            ticket: getTicket(),
         })
     }
 
