@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import getTicket from '../utils/getTicket'
 
 export default class BallForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             ticket: Array.from({length: 6}).fill(0),
         }
@@ -12,9 +12,13 @@ export default class BallForm extends Component {
     handleFormSubmit = e => {
         e.preventDefault();
 
+        const newTicket = getTicket();
+
         this.setState({
-            ticket: getTicket(),
-        })
+            ticket: newTicket,
+        });
+
+        this.props.onBallFormSubmit(newTicket);
     }
 
     isPowerball = ballId => ballId === this.state.ticket.length - 1 ? 'powerBall' : 'normalBall'
